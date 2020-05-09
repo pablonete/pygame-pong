@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 
 size = 800, 600
-ventana = pygame.display.set_mode(size)
+ventana = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Pong")
 ancho, alto = pygame.display.get_surface().get_size()
 
@@ -26,17 +26,24 @@ tipoletra = pygame.font.Font("mifuente.ttf", 20)
 tipoletrapuntos = pygame.font.Font("mifuente.ttf", 40)
 puntos = [0, 0]
 
-velocidad = [1, 1]
+delta_pelota = 30
+delta_jugador = 10
+velocidad = [delta_pelota, delta_pelota]
 
 run = True
 while run:
-  pelotaXY = pelotaXY.move(velocidad)
-
   fondo = fondobase
 
   for evento in pygame.event.get():
     if evento.type == pygame.QUIT:
       run = False
+
+  keys = pygame.key.get_pressed();
+
+  if keys[pygame.K_ESCAPE]:
+    run = False
+
+  pelotaXY = pelotaXY.move(velocidad)
 
   if pelotaXY.left < 0:
      velocidad[0] = -velocidad[0]
@@ -50,23 +57,24 @@ while run:
   if pelotaXY.top < 0 or pelotaXY.bottom > alto:
     velocidad[1] = -velocidad[1]
 
-  keys = pygame.key.get_pressed();
   if keys[pygame.K_w]:
     if (jugador1XY[1] > 0):
-      jugador1XY = jugador1XY.move(0, -1)
+      jugador1XY = jugador1XY.move(0, -delta_jugador)
   if keys[pygame.K_s]:
     if (jugador1XY[1] < alto - 100):
-      jugador1XY = jugador1XY.move(0, 1)
+      jugador1XY = jugador1XY.move(0, delta_jugador)
 
   if keys[pygame.K_UP]:
     if (jugador2XY[1] > 0):
-      jugador2XY = jugador2XY.move(0, -1)
+      jugador2XY = jugador2XY.move(0, -delta_jugador)
   if keys[pygame.K_DOWN]:
     if (jugador2XY[1] < alto - 100):
-      jugador2XY = jugador2XY.move(0, 1)
+      jugador2XY = jugador2XY.move(0, delta_jugador)
 
-  if jugador1XY.colliderect(pelotaXY) or jugador2XY.colliderect(pelotaXY):
-    velocidad[0] = -velocidad[0]
+  if jugador1XY.colliderect(pelotaXY):
+    velocidad[0] = delta_pelota
+  if jugador2XY.colliderect(pelotaXY):
+    velocidad[0] = -delta_pelota
 
   ventana.fill(fondo)
   ventana.blit(tipoletra.render("Jugador 1", 0, (130, 0, 0)), (20, 20))
@@ -77,6 +85,7 @@ while run:
   ventana.blit(jugador1, jugador1XY)
   ventana.blit(jugador2, jugador2XY)
   pygame.display.update()
-  #pygame.display.flip()
-
+  pygame.display.flip()
+  pygame.time.Clock().tick(60)
+  
 pygame.quit()
