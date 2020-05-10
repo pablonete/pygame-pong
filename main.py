@@ -43,43 +43,44 @@ while run:
   if keys[pygame.K_ESCAPE]:
     run = False
 
-  if (counter == 100):
-    delta_pelota += 1
-    counter = 0
-  counter += 1
+  if (puntos[0] < 21 and puntos[1] < 21):
+    if (counter == 100):
+      delta_pelota += 1
+      counter = 0
+    counter += 1
 
-  pelotaXY = pelotaXY.move([vector[0] * delta_pelota, vector[1] * delta_pelota])
+    pelotaXY = pelotaXY.move([vector[0] * delta_pelota, vector[1] * delta_pelota])
 
-  if pelotaXY.left < 0:
-     vector[0] = -vector[0]
-     puntos[1] = puntos[1] + 1
-     fondo = colors[1]
-  if pelotaXY.right > ancho:
-     vector[0] = -vector[0]
-     puntos[0] = puntos[0] + 1
-     fondo = colors[0]
+    if pelotaXY.left < 0:
+      vector[0] = -vector[0]
+      puntos[1] = puntos[1] + 1
+      fondo = colors[1]
+    if pelotaXY.right > ancho:
+      vector[0] = -vector[0]
+      puntos[0] = puntos[0] + 1
+      fondo = colors[0]
 
-  if pelotaXY.top < 0 or pelotaXY.bottom > alto:
-    vector[1] = -vector[1]
+    if pelotaXY.top < 0 or pelotaXY.bottom > alto:
+      vector[1] = -vector[1]
 
-  if keys[pygame.K_w]:
-    if (jugador1XY[1] > 0):
-      jugador1XY = jugador1XY.move(0, -delta_jugador)
-  if keys[pygame.K_s]:
-    if (jugador1XY[1] < alto - 100):
-      jugador1XY = jugador1XY.move(0, delta_jugador)
+    if keys[pygame.K_w]:
+      if (jugador1XY[1] > 0):
+        jugador1XY = jugador1XY.move(0, -delta_jugador)
+    if keys[pygame.K_s]:
+      if (jugador1XY[1] < alto - 100):
+        jugador1XY = jugador1XY.move(0, delta_jugador)
 
-  if keys[pygame.K_UP]:
-    if (jugador2XY[1] > 0):
-      jugador2XY = jugador2XY.move(0, -delta_jugador)
-  if keys[pygame.K_DOWN]:
-    if (jugador2XY[1] < alto - 100):
-      jugador2XY = jugador2XY.move(0, delta_jugador)
+    if keys[pygame.K_UP]:
+      if (jugador2XY[1] > 0):
+        jugador2XY = jugador2XY.move(0, -delta_jugador)
+    if keys[pygame.K_DOWN]:
+      if (jugador2XY[1] < alto - 100):
+        jugador2XY = jugador2XY.move(0, delta_jugador)
 
-  if jugador1XY.colliderect(pelotaXY):
-    vector[0] = 1
-  if jugador2XY.colliderect(pelotaXY):
-    vector[0] = -1
+    if jugador1XY.colliderect(pelotaXY):
+      vector[0] = 1
+    if jugador2XY.colliderect(pelotaXY):
+      vector[0] = -1
 
   ventana.fill(fondo)
   ventana.blit(tipoletra.render("Jugador 1", 0, (130, 0, 0)), (20, 20))
@@ -89,6 +90,11 @@ while run:
   ventana.blit(pelota, pelotaXY)
   ventana.blit(jugador1, jugador1XY)
   ventana.blit(jugador2, jugador2XY)
+  if (puntos[0] >= 21):
+    ventana.blit(tipoletrapuntos.render("Ganador 1", 0, colors[0]), (ancho/2 - 100, 200))
+  elif (puntos[1] >= 21):
+    ventana.blit(tipoletrapuntos.render("Ganador 2", 0, colors[1]), (ancho/2 - 100, 200))
+
   pygame.display.update()
   pygame.display.flip()
   pygame.time.Clock().tick(60)
