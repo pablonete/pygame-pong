@@ -2,8 +2,7 @@ import pygame
 
 pygame.init()
 
-size = 800, 600
-ventana = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+ventana = pygame.display.set_mode((800, 600), 0)
 pygame.display.set_caption("Pong")
 ancho, alto = pygame.display.get_surface().get_size()
 
@@ -26,9 +25,10 @@ tipoletra = pygame.font.Font("mifuente.ttf", 20)
 tipoletrapuntos = pygame.font.Font("mifuente.ttf", 40)
 puntos = [0, 0]
 
-delta_pelota = 30
+delta_pelota = 10
 delta_jugador = 10
-velocidad = [delta_pelota, delta_pelota]
+vector = [1, 1]
+counter = 0
 
 run = True
 while run:
@@ -38,24 +38,29 @@ while run:
     if evento.type == pygame.QUIT:
       run = False
 
-  keys = pygame.key.get_pressed();
+  keys = pygame.key.get_pressed()
 
   if keys[pygame.K_ESCAPE]:
     run = False
 
-  pelotaXY = pelotaXY.move(velocidad)
+  if (counter == 100):
+    delta_pelota += 1
+    counter = 0
+  counter += 1
+
+  pelotaXY = pelotaXY.move([vector[0] * delta_pelota, vector[1] * delta_pelota])
 
   if pelotaXY.left < 0:
-     velocidad[0] = -velocidad[0]
+     vector[0] = -vector[0]
      puntos[1] = puntos[1] + 1
      fondo = colors[1]
   if pelotaXY.right > ancho:
-     velocidad[0] = -velocidad[0]
+     vector[0] = -vector[0]
      puntos[0] = puntos[0] + 1
      fondo = colors[0]
 
   if pelotaXY.top < 0 or pelotaXY.bottom > alto:
-    velocidad[1] = -velocidad[1]
+    vector[1] = -vector[1]
 
   if keys[pygame.K_w]:
     if (jugador1XY[1] > 0):
@@ -72,9 +77,9 @@ while run:
       jugador2XY = jugador2XY.move(0, delta_jugador)
 
   if jugador1XY.colliderect(pelotaXY):
-    velocidad[0] = delta_pelota
+    vector[0] = 1
   if jugador2XY.colliderect(pelotaXY):
-    velocidad[0] = -delta_pelota
+    vector[0] = -1
 
   ventana.fill(fondo)
   ventana.blit(tipoletra.render("Jugador 1", 0, (130, 0, 0)), (20, 20))
@@ -87,5 +92,5 @@ while run:
   pygame.display.update()
   pygame.display.flip()
   pygame.time.Clock().tick(60)
-  
+    
 pygame.quit()
