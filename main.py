@@ -16,11 +16,13 @@ pelota = pygame.image.load("images/balon-copa-malaga.png")
 pelota = pygame.transform.scale(pelota, (40, 40))
 pelotaXY = pygame.Rect(int(ancho/8), int(alto/8), 40, 40)
 
-jugador1 = pygame.image.load("bate.png")
+jugador1 = pygame.image.load("images/guerrero-1.png")
+jugador1 = pygame.transform.scale(jugador1, (40, 90))
 jugador1XY = jugador1.get_rect()
 jugador1XY.move_ip(50, int(alto/2))
 
-jugador2 = pygame.image.load("palazul.png")
+jugador2 = pygame.image.load("images/guerrero-2.png")
+jugador2 = pygame.transform.scale(jugador2, (40, 90))
 jugador2XY = jugador2.get_rect()
 jugador2XY.move_ip(ancho - 50, int(alto/2))
 
